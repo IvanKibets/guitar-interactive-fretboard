@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Volume2, VolumeX, Plus, Trash2 } from 'lucide-react';
+import { Download, Volume2, VolumeX, Plus, Trash2, Menu, X } from 'lucide-react';
 
 const GuitarFretboard = () => {
   const FRETS = 24;
@@ -42,6 +42,7 @@ const GuitarFretboard = () => {
     NOTES.forEach(note => ALL_NOTES.push(`${note}${octave}`));
   }
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [customTunings, setCustomTunings] = useState({});
   const [allTunings, setAllTunings] = useState(DEFAULT_TUNINGS);
   const [tuning, setTuning] = useState([...DEFAULT_TUNINGS['Стандартный']].reverse());
@@ -57,10 +58,17 @@ const GuitarFretboard = () => {
   const [showAddTuning, setShowAddTuning] = useState(false);
   const [newTuningName, setNewTuningName] = useState('');
   const [showCircle, setShowCircle] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const fretboardRef = useRef(null);
   const audioContextRef = useRef(null);
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
     // Initialize Web Audio API on user interaction
     const initAudio = () => {
       if (!audioContextRef.current) {
@@ -68,10 +76,10 @@ const GuitarFretboard = () => {
       }
     };
 
-    // Add click listener to initialize audio context
     document.addEventListener('click', initAudio, { once: true });
 
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (audioContextRef.current) {
         audioContextRef.current.close();
       }
@@ -91,7 +99,6 @@ const GuitarFretboard = () => {
   const getScaleNotes = (rootNote, minor = false) => {
     if (!rootNote) return new Set(NOTES);
 
-    // Remove 'm' suffix if present
     const cleanRoot = rootNote.replace('m', '');
     const rootIndex = NOTES.indexOf(cleanRoot);
     if (rootIndex === -1) return new Set(NOTES);
@@ -119,7 +126,6 @@ const GuitarFretboard = () => {
 
     const ctx = audioContextRef.current;
 
-    // Resume context if suspended
     if (ctx.state === 'suspended') {
       ctx.resume().then(() => {
         playNoteInternal(ctx, note);
@@ -324,7 +330,8 @@ const GuitarFretboard = () => {
     return true;
   };
 
-  return (
+  // Render desktop version
+  const renderDesktop = () => (
       <div
           className="min-h-screen p-8 relative"
           style={{
@@ -464,148 +471,6 @@ const GuitarFretboard = () => {
             </button>
           </div>
 
-          {/* Circle of Fifths Modal */}
-          {showCircle && (
-              <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setShowCircle(false)}>
-                <div className="bg-amber-50 p-8 rounded-xl shadow-2xl" onClick={(e) => e.stopPropagation()}>
-                  <h2 className="text-2xl font-bold text-amber-900 mb-6 text-center">Кварто-квинтовый круг</h2>
-                  <svg width="500" height="500" viewBox="0 0 500 500">
-                    {/* Outer circle (Major keys) */}
-                    {CIRCLE_DATA.map((data, idx) => {
-                      const startAngle = (data.angle - 15) * Math.PI / 180;
-                      const endAngle = (data.angle + 15) * Math.PI / 180;
-                      const outerRadius = 200;
-                      const innerRadius = 140;
-
-                      const x1 = 250 + outerRadius * Math.cos(startAngle);
-                      const y1 = 250 + outerRadius * Math.sin(startAngle);
-                      const x2 = 250 + outerRadius * Math.cos(endAngle);
-                      const y2 = 250 + outerRadius * Math.sin(endAngle);
-                      const x3 = 250 + innerRadius * Math.cos(endAngle);
-                      const y3 = 250 + innerRadius * Math.sin(endAngle);
-                      const x4 = 250 + innerRadius * Math.cos(startAngle);
-                      const y4 = 250 + innerRadius * Math.sin(startAngle);
-
-                      const isSelected = selectedKey === data.major && !isMinor;
-                      const isHovered = hoveredKey === data.major;
-
-                      return (
-                          <g key={`major-${idx}`}>
-                            <path
-                                d={`M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 0 0 ${x4} ${y4} Z`}
-                                fill={isSelected ? 'rgba(34, 139, 34, 0.9)' : isHovered ? 'rgba(34, 139, 34, 0.5)' : 'rgba(212, 165, 116, 0.8)'}
-                                stroke="#8B6F47"
-                                strokeWidth="2"
-                                className="cursor-pointer transition-all"
-                                onMouseEnter={() => setHoveredKey(data.major)}
-                                onMouseLeave={() => setHoveredKey(null)}
-                                onClick={() => selectKey(data.major, false)}
-                            />
-                            <text
-                                x={250 + 170 * Math.cos(data.angle * Math.PI / 180)}
-                                y={250 + 170 * Math.sin(data.angle * Math.PI / 180)}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                className="font-bold text-lg fill-amber-900 pointer-events-none"
-                            >
-                              {data.major}
-                            </text>
-                          </g>
-                      );
-                    })}
-
-                    {/* Inner circle (Minor keys) */}
-                    {CIRCLE_DATA.map((data, idx) => {
-                      const startAngle = (data.angle - 15) * Math.PI / 180;
-                      const endAngle = (data.angle + 15) * Math.PI / 180;
-                      const outerRadius = 140;
-                      const innerRadius = 80;
-
-                      const x1 = 250 + outerRadius * Math.cos(startAngle);
-                      const y1 = 250 + outerRadius * Math.sin(startAngle);
-                      const x2 = 250 + outerRadius * Math.cos(endAngle);
-                      const y2 = 250 + outerRadius * Math.sin(endAngle);
-                      const x3 = 250 + innerRadius * Math.cos(endAngle);
-                      const y3 = 250 + innerRadius * Math.sin(endAngle);
-                      const x4 = 250 + innerRadius * Math.cos(startAngle);
-                      const y4 = 250 + innerRadius * Math.sin(startAngle);
-
-                      const minorKey = data.minor.replace('m', '');
-                      const isSelected = selectedKey === minorKey && isMinor;
-                      const isHovered = hoveredKey === data.major;
-
-                      return (
-                          <g key={`minor-${idx}`}>
-                            <path
-                                d={`M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 0 0 ${x4} ${y4} Z`}
-                                fill={isSelected ? 'rgba(34, 139, 34, 0.9)' : isHovered ? 'rgba(34, 139, 34, 0.5)' : 'rgba(160, 130, 90, 0.8)'}
-                                stroke="#6B563F"
-                                strokeWidth="2"
-                                className="cursor-pointer transition-all"
-                                onMouseEnter={() => setHoveredKey(data.major)}
-                                onMouseLeave={() => setHoveredKey(null)}
-                                onClick={() => selectKey(minorKey, true)}
-                            />
-                            <text
-                                x={250 + 110 * Math.cos(data.angle * Math.PI / 180)}
-                                y={250 + 110 * Math.sin(data.angle * Math.PI / 180)}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                className="font-bold text-sm fill-amber-100 pointer-events-none"
-                            >
-                              {data.minor}
-                            </text>
-                          </g>
-                      );
-                    })}
-
-                    {/* Center circle */}
-                    <circle cx="250" cy="250" r="80" fill="rgba(139, 90, 43, 0.9)" stroke="#6B563F" strokeWidth="3" />
-                    <text x="250" y="240" textAnchor="middle" className="font-bold text-base fill-amber-100">Внешний:</text>
-                    <text x="250" y="260" textAnchor="middle" className="font-bold text-base fill-amber-100">мажор</text>
-                    <text x="250" y="280" textAnchor="middle" className="font-bold text-sm fill-amber-200">Внутренний:</text>
-                    <text x="250" y="295" textAnchor="middle" className="font-bold text-sm fill-amber-200">минор</text>
-                  </svg>
-                  <p className="text-center text-amber-800 mt-4">Наведи для предпросмотра, кликни для выбора</p>
-                </div>
-              </div>
-          )}
-
-          {/* Add Tuning Modal */}
-          {showAddTuning && (
-              <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setShowAddTuning(false)}>
-                <div className="bg-amber-50 p-8 rounded-xl shadow-2xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                  <h2 className="text-2xl font-bold text-amber-900 mb-4">Добавить свой строй</h2>
-                  <p className="text-amber-700 mb-4">Текущий строй (от низкой к высокой): {[...tuning].reverse().join(', ')}</p>
-                  <input
-                      type="text"
-                      placeholder="Название строя..."
-                      value={newTuningName}
-                      onChange={(e) => setNewTuningName(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && addCustomTuning()}
-                      className="w-full px-4 py-2 border-2 border-amber-700 rounded-lg mb-4"
-                  />
-                  <div className="flex gap-3">
-                    <button
-                        onClick={addCustomTuning}
-                        className="flex-1 px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
-                    >
-                      Сохранить
-                    </button>
-                    <button
-                        onClick={() => {
-                          setShowAddTuning(false);
-                          setNewTuningName('');
-                        }}
-                        className="flex-1 px-6 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition-colors"
-                    >
-                      Отмена
-                    </button>
-                  </div>
-                </div>
-              </div>
-          )}
-
           <div className="flex gap-4 items-start">
             {/* String tuning selectors */}
             <div className="flex flex-col gap-3">
@@ -656,7 +521,7 @@ const GuitarFretboard = () => {
                 <div className="space-y-3 relative">
                   {tuning.map((stringNote, stringIdx) => (
                       <div key={stringIdx} className="flex items-center relative">
-                        {/* String line with metallic gradient */}
+                        {/* String line */}
                         <div
                             className="absolute w-full rounded-full"
                             style={{
@@ -698,7 +563,7 @@ const GuitarFretboard = () => {
                                       }}></div>
                                   )}
 
-                                  {/* Fret markers - behind notes */}
+                                  {/* Fret markers */}
                                   {displayFret > 0 && [3, 5, 7, 9, 15, 17, 19, 21].includes(displayFret) && stringIdx === 2 && (
                                       <div className="absolute w-3 h-3 rounded-full z-0" style={{
                                         background: 'radial-gradient(circle at 35% 35%, #ffffff, #e8e8e8, #c0c0c0)',
@@ -837,6 +702,444 @@ const GuitarFretboard = () => {
           )}
         </div>
       </div>
+  );
+
+  // Render mobile version with vertical fretboard
+  const renderMobile = () => (
+      <div
+          className="min-h-screen relative overflow-x-hidden"
+          style={{
+            background: `
+          linear-gradient(rgba(62, 39, 35, 0.85), rgba(62, 39, 35, 0.85)),
+          linear-gradient(180deg, #4a2c1c 0%, #3e2723 50%, #2d1a14 100%)
+        `
+          }}
+      >
+        <div className="p-4">
+          {/* Header */}
+          <div className="text-center mb-4">
+            <h1 className="text-2xl font-bold text-amber-200 mb-1 drop-shadow-lg">🎸 Гитарный гриф</h1>
+            <p className="text-amber-300 text-sm">
+              {playMode ? '🔊 Тап для звука' : '👆 Тап чтобы скрыть/показать'}
+            </p>
+          </div>
+
+          {/* Mobile Controls - Group 1 */}
+          <div className="mb-3 p-3 rounded-lg shadow-xl" style={{
+            background: 'linear-gradient(135deg, rgba(101, 67, 33, 0.95) 0%, rgba(139, 90, 43, 0.95) 100%)',
+            border: '2px solid rgba(160, 82, 45, 0.8)'
+          }}>
+            <div className="flex gap-2 mb-2">
+              <div className="flex-1">
+                <label className="text-amber-100 text-xs font-semibold mb-1 block">Строй</label>
+                <select
+                    value={selectedTuning}
+                    onChange={(e) => changeTuningPreset(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold text-sm"
+                >
+                  {Object.keys(allTunings).map(preset => (
+                      <option key={preset} value={preset}>{preset}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1">
+                <label className="text-amber-100 text-xs font-semibold mb-1 block">Капо</label>
+                <select
+                    value={capo}
+                    onChange={(e) => setCapo(Number(e.target.value))}
+                    className="w-full px-3 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold text-sm"
+                >
+                  <option value={0}>Нет</option>
+                  {Array.from({length: 12}, (_, i) => i + 1).map(f => (
+                      <option key={f} value={f}>Лад {f}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Controls - Group 2 */}
+          <div className="mb-3 p-3 rounded-lg shadow-xl" style={{
+            background: 'linear-gradient(135deg, rgba(101, 67, 33, 0.95) 0%, rgba(139, 90, 43, 0.95) 100%)',
+            border: '2px solid rgba(160, 82, 45, 0.8)'
+          }}>
+            <div className="mb-2">
+              <label className="text-amber-100 text-xs font-semibold mb-1 block">Тональность</label>
+              <div className="flex gap-2">
+                <button
+                    onClick={() => setShowCircle(!showCircle)}
+                    className="flex-1 px-3 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold hover:bg-amber-100 transition-colors text-sm"
+                >
+                  {selectedKey ? `${selectedKey}${isMinor ? 'm' : 'M'}` : 'Выбрать'}
+                </button>
+                {selectedKey && (
+                    <button
+                        onClick={() => {
+                          setSelectedKey(null);
+                          setIsMinor(false);
+                          setHiddenNotes(new Set());
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-semibold"
+                    >
+                      ✕
+                    </button>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                  onClick={() => setShowHarmonics(!showHarmonics)}
+                  className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-all shadow-md text-sm ${
+                      showHarmonics
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-400 text-gray-800'
+                  }`}
+              >
+                {showHarmonics ? '🎵 Флажолеты' : 'Флажолеты'}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Controls - Group 3 */}
+          <div className="mb-4 p-3 rounded-lg shadow-xl" style={{
+            background: 'linear-gradient(135deg, rgba(101, 67, 33, 0.95) 0%, rgba(139, 90, 43, 0.95) 100%)',
+            border: '2px solid rgba(160, 82, 45, 0.8)'
+          }}>
+            <div className="flex gap-2">
+              <button
+                  onClick={() => setPlayMode(!playMode)}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-all shadow-md ${
+                      playMode
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-gray-400 text-gray-800'
+                  }`}
+              >
+                {playMode ? <><Volume2 size={18} /> Слушать</> : <><VolumeX size={18} /> Править</>}
+              </button>
+              <button
+                  onClick={exportSnapshot}
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors shadow-lg"
+              >
+                <Download size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Fretboard - Vertical */}
+          <div ref={fretboardRef} className="relative rounded-xl shadow-2xl overflow-y-auto" style={{
+            height: 'calc(100vh - 420px)',
+            background: `
+            repeating-linear-gradient(0deg,
+              #D4A574 0px,
+              #C19A6B 1px,
+              #B8956A 2px,
+              #D4A574 3px,
+              #E8C9A0 4px,
+              #D4A574 5px,
+              #C19A6B 8px,
+              #A68860 10px,
+              #C19A6B 12px,
+              #D4A574 15px
+            ),
+            linear-gradient(180deg, #D4A574 0%, #C19A6B 30%, #B8956A 50%, #A68860 70%, #947556 100%)
+          `,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,255,255,0.2)'
+          }}>
+            {/* String labels at top */}
+            <div className="sticky top-0 z-40 flex justify-around py-2 px-2" style={{
+              background: 'rgba(139, 90, 43, 0.95)',
+              borderBottom: '2px solid rgba(101, 67, 33, 0.8)'
+            }}>
+              {[...tuning].reverse().map((note, idx) => (
+                  <div key={idx} className="text-amber-100 font-bold text-xs text-center" style={{flex: 1}}>
+                    {note}
+                  </div>
+              ))}
+            </div>
+
+            <div className="p-2">
+              {/* Frets vertically */}
+              {Array.from({length: FRETS + 1}, (_, displayFret) => {
+                const fretRelativeToCapo = displayFret - capo;
+                const displayNumber = capo > 0 && displayFret >= capo ? fretRelativeToCapo : displayFret;
+                const isCapoFret = displayFret === capo && capo > 0;
+
+                return (
+                    <div key={displayFret} className="relative mb-1">
+                      {/* Fret wire */}
+                      {displayFret > 0 && (
+                          <div className="absolute top-0 left-0 right-0 h-1 rounded-sm z-0" style={{
+                            background: 'linear-gradient(90deg, #9e9e9e 0%, #d0d0d0 20%, #f5f5f5 40%, #d0d0d0 60%, #9e9e9e 80%, #707070 100%)',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.6)'
+                          }}></div>
+                      )}
+
+                      {/* Capo overlay */}
+                      {isCapoFret && (
+                          <div className="absolute top-0 left-0 right-0 h-16 z-30 flex items-center justify-center rounded" style={{
+                            background: 'rgba(20, 20, 20, 0.7)',
+                            border: '2px solid rgba(60, 60, 60, 0.9)'
+                          }}>
+                            <span className="text-white font-bold text-xs">CAPO</span>
+                          </div>
+                      )}
+
+                      {/* String notes row */}
+                      <div className="flex justify-around items-center py-2 relative z-10">
+                        {/* Fret number on left */}
+                        <div className="absolute -left-8 top-1/2 -translate-y-1/2">
+                          <label className="flex flex-col items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={hiddenFrets.has(displayFret)}
+                                onChange={() => toggleFret(displayFret)}
+                                className="w-5 h-5 cursor-pointer mb-1"
+                            />
+                            <span className="text-xs font-bold text-amber-200">{displayNumber}</span>
+                          </label>
+                        </div>
+
+                        {[...tuning].reverse().map((stringNote, stringIdx) => {
+                          const actualStringIdx = tuning.length - 1 - stringIdx;
+                          const note = getNoteFromString(stringNote, displayFret);
+                          const effectiveStringNote = capo > 0 ? getNoteFromString(stringNote, capo) : stringNote;
+                          const harmonicInfo = showHarmonics ? getHarmonicInfo(fretRelativeToCapo) : null;
+                          const harmonicNote = harmonicInfo ? getHarmonicNote(effectiveStringNote, fretRelativeToCapo) : note;
+                          const visible = isNoteVisible(actualStringIdx, displayFret);
+
+                          return (
+                              <div key={stringIdx} className="relative" style={{flex: 1, display: 'flex', justifyContent: 'center'}}>
+                                {/* String line */}
+                                <div
+                                    className="absolute left-0 right-0 rounded-full"
+                                    style={{
+                                      height: `${2.5 - actualStringIdx * 0.3}px`,
+                                      top: '50%',
+                                      transform: 'translateY(-50%)',
+                                      background: `linear-gradient(90deg, 
+                                rgba(220, 220, 220, 1) 0%, 
+                                rgba(192, 192, 192, 1) 30%,
+                                rgba(150, 150, 150, 1) 50%,
+                                rgba(192, 192, 192, 1) 70%,
+                                rgba(220, 220, 220, 1) 100%
+                              )`,
+                                      boxShadow: `0 ${1 + actualStringIdx * 0.2}px 3px rgba(0,0,0,0.5)`
+                                    }}
+                                ></div>
+
+                                {/* Note */}
+                                <button
+                                    onClick={() => handleNoteClick(actualStringIdx, displayFret, harmonicInfo ? harmonicNote : note)}
+                                    className={`
+                              w-12 h-12 flex items-center justify-center text-xs font-bold rounded-full
+                              transition-all active:scale-95 relative z-20
+                              ${visible && !harmonicInfo ? 'shadow-lg' : ''}
+                              ${harmonicInfo && visible ? 'shadow-lg' : ''}
+                              ${!visible ? 'opacity-0' : ''}
+                            `}
+                                    style={
+                                      harmonicInfo && visible ? {
+                                        backgroundColor: harmonicInfo.color,
+                                        color: 'white',
+                                        clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+                                        border: '2px solid rgba(0,0,0,0.3)'
+                                      } : visible ? {
+                                        background: playMode ? 'radial-gradient(circle at 30% 30%, #dda0dd, #da70d6)' : 'radial-gradient(circle at 30% 30%, #fffacd, #ffd700)',
+                                        color: playMode ? '#4a0e4e' : '#654321',
+                                        border: playMode ? '2px solid #8b008b' : '2px solid #b8860b',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.5)'
+                                      } : {}
+                                    }
+                                >
+                                  {visible && (harmonicInfo ? harmonicNote : note)}
+                                </button>
+                              </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Fret markers */}
+                      {[3, 5, 7, 9, 12, 15, 17, 19, 21, 24].includes(displayFret) && (
+                          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                            <div className="w-2 h-2 rounded-full" style={{
+                              background: 'radial-gradient(circle at 35% 35%, #ffffff, #e8e8e8, #c0c0c0)',
+                              boxShadow: 'inset -1px -1px 2px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)'
+                            }}></div>
+                            {[12, 24].includes(displayFret) && (
+                                <div className="w-2 h-2 rounded-full" style={{
+                                  background: 'radial-gradient(circle at 35% 35%, #ffffff, #e8e8e8, #c0c0c0)',
+                                  boxShadow: 'inset -1px -1px 2px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)'
+                                }}></div>
+                            )}
+                          </div>
+                      )}
+                    </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Mobile info banner */}
+          {selectedKey && (
+              <div className="mt-3 p-2 rounded-lg shadow-xl text-center text-sm" style={{
+                background: 'linear-gradient(135deg, rgba(34, 139, 34, 0.95) 0%, rgba(46, 125, 50, 0.95) 100%)',
+                border: '2px solid rgba(76, 175, 80, 0.8)'
+              }}>
+                <p className="text-white font-semibold">
+                  {selectedKey} {isMinor ? 'минор' : 'мажор'}
+                </p>
+              </div>
+          )}
+        </div>
+      </div>
+  );
+
+  return (
+      <>
+        {isMobile ? renderMobile() : renderDesktop()}
+
+        {/* Circle of Fifths Modal */}
+        {showCircle && (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={() => setShowCircle(false)}>
+              <div className="bg-amber-50 p-4 md:p-8 rounded-xl shadow-2xl max-w-full" onClick={(e) => e.stopPropagation()}>
+                <h2 className="text-xl md:text-2xl font-bold text-amber-900 mb-4 md:mb-6 text-center">Кварто-квинтовый круг</h2>
+                <svg width={isMobile ? "300" : "500"} height={isMobile ? "300" : "500"} viewBox="0 0 500 500" className="max-w-full">
+                  {/* Outer circle (Major keys) */}
+                  {CIRCLE_DATA.map((data, idx) => {
+                    const startAngle = (data.angle - 15) * Math.PI / 180;
+                    const endAngle = (data.angle + 15) * Math.PI / 180;
+                    const outerRadius = 200;
+                    const innerRadius = 140;
+
+                    const x1 = 250 + outerRadius * Math.cos(startAngle);
+                    const y1 = 250 + outerRadius * Math.sin(startAngle);
+                    const x2 = 250 + outerRadius * Math.cos(endAngle);
+                    const y2 = 250 + outerRadius * Math.sin(endAngle);
+                    const x3 = 250 + innerRadius * Math.cos(endAngle);
+                    const y3 = 250 + innerRadius * Math.sin(endAngle);
+                    const x4 = 250 + innerRadius * Math.cos(startAngle);
+                    const y4 = 250 + innerRadius * Math.sin(startAngle);
+
+                    const isSelected = selectedKey === data.major && !isMinor;
+                    const isHovered = hoveredKey === data.major;
+
+                    return (
+                        <g key={`major-${idx}`}>
+                          <path
+                              d={`M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 0 0 ${x4} ${y4} Z`}
+                              fill={isSelected ? 'rgba(34, 139, 34, 0.9)' : isHovered ? 'rgba(34, 139, 34, 0.5)' : 'rgba(212, 165, 116, 0.8)'}
+                              stroke="#8B6F47"
+                              strokeWidth="2"
+                              className="cursor-pointer transition-all"
+                              onMouseEnter={() => setHoveredKey(data.major)}
+                              onMouseLeave={() => setHoveredKey(null)}
+                              onClick={() => selectKey(data.major, false)}
+                          />
+                          <text
+                              x={250 + 170 * Math.cos(data.angle * Math.PI / 180)}
+                              y={250 + 170 * Math.sin(data.angle * Math.PI / 180)}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              className="font-bold text-lg fill-amber-900 pointer-events-none"
+                          >
+                            {data.major}
+                          </text>
+                        </g>
+                    );
+                  })}
+
+                  {/* Inner circle (Minor keys) */}
+                  {CIRCLE_DATA.map((data, idx) => {
+                    const startAngle = (data.angle - 15) * Math.PI / 180;
+                    const endAngle = (data.angle + 15) * Math.PI / 180;
+                    const outerRadius = 140;
+                    const innerRadius = 80;
+
+                    const x1 = 250 + outerRadius * Math.cos(startAngle);
+                    const y1 = 250 + outerRadius * Math.sin(startAngle);
+                    const x2 = 250 + outerRadius * Math.cos(endAngle);
+                    const y2 = 250 + outerRadius * Math.sin(endAngle);
+                    const x3 = 250 + innerRadius * Math.cos(endAngle);
+                    const y3 = 250 + innerRadius * Math.sin(endAngle);
+                    const x4 = 250 + innerRadius * Math.cos(startAngle);
+                    const y4 = 250 + innerRadius * Math.sin(startAngle);
+
+                    const minorKey = data.minor.replace('m', '');
+                    const isSelected = selectedKey === minorKey && isMinor;
+                    const isHovered = hoveredKey === data.major;
+
+                    return (
+                        <g key={`minor-${idx}`}>
+                          <path
+                              d={`M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 0 0 ${x4} ${y4} Z`}
+                              fill={isSelected ? 'rgba(34, 139, 34, 0.9)' : isHovered ? 'rgba(34, 139, 34, 0.5)' : 'rgba(160, 130, 90, 0.8)'}
+                              stroke="#6B563F"
+                              strokeWidth="2"
+                              className="cursor-pointer transition-all"
+                              onMouseEnter={() => setHoveredKey(data.major)}
+                              onMouseLeave={() => setHoveredKey(null)}
+                              onClick={() => selectKey(minorKey, true)}
+                          />
+                          <text
+                              x={250 + 110 * Math.cos(data.angle * Math.PI / 180)}
+                              y={250 + 110 * Math.sin(data.angle * Math.PI / 180)}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              className="font-bold text-sm fill-amber-100 pointer-events-none"
+                          >
+                            {data.minor}
+                          </text>
+                        </g>
+                    );
+                  })}
+
+                  {/* Center circle */}
+                  <circle cx="250" cy="250" r="80" fill="rgba(139, 90, 43, 0.9)" stroke="#6B563F" strokeWidth="3" />
+                  <text x="250" y="235" textAnchor="middle" className="font-bold text-sm md:text-base fill-amber-100">Внешний:</text>
+                  <text x="250" y="255" textAnchor="middle" className="font-bold text-sm md:text-base fill-amber-100">мажор</text>
+                  <text x="250" y="275" textAnchor="middle" className="font-bold text-xs md:text-sm fill-amber-200">Внутренний:</text>
+                  <text x="250" y="290" textAnchor="middle" className="font-bold text-xs md:text-sm fill-amber-200">минор</text>
+                </svg>
+                <p className="text-center text-amber-800 mt-4 text-sm">{isMobile ? 'Тап для выбора' : 'Наведи для предпросмотра, кликни для выбора'}</p>
+              </div>
+            </div>
+        )}
+
+        {/* Add Tuning Modal */}
+        {showAddTuning && !isMobile && (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setShowAddTuning(false)}>
+              <div className="bg-amber-50 p-8 rounded-xl shadow-2xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                <h2 className="text-2xl font-bold text-amber-900 mb-4">Добавить свой строй</h2>
+                <p className="text-amber-700 mb-4">Текущий строй (от низкой к высокой): {[...tuning].reverse().join(', ')}</p>
+                <input
+                    type="text"
+                    placeholder="Название строя..."
+                    value={newTuningName}
+                    onChange={(e) => setNewTuningName(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addCustomTuning()}
+                    className="w-full px-4 py-2 border-2 border-amber-700 rounded-lg mb-4"
+                />
+                <div className="flex gap-3">
+                  <button
+                      onClick={addCustomTuning}
+                      className="flex-1 px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                  >
+                    Сохранить
+                  </button>
+                  <button
+                      onClick={() => {
+                        setShowAddTuning(false);
+                        setNewTuningName('');
+                      }}
+                      className="flex-1 px-6 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition-colors"
+                  >
+                    Отмена
+                  </button>
+                </div>
+              </div>
+            </div>
+        )}
+      </>
   );
 };
 
