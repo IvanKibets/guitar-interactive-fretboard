@@ -1,133 +1,133 @@
-# 🎸 Интерактивный гитарный гриф
+# 🎸 Interactive Guitar Fretboard
 
-Мощное веб-приложение для гитаристов, позволяющее визуализировать ноты на грифе, изучать тональности, практиковать флажолеты и слушать звучание нот.
+A powerful web application for guitarists that allows you to visualize notes on the fretboard, learn scales, practice harmonics, and listen to note sounds.
 
-**🌐 Доступно онлайн: [https://guitar-flex.online](https://guitar-flex.online)**
+**🌐 Available online: [https://guitar-flex.online](https://guitar-flex.online)**
 
-![Гитарный гриф](https://img.shields.io/badge/React-18.0+-61DAFB?style=for-the-badge&logo=react)
+![Guitar Fretboard](https://img.shields.io/badge/React-18.0+-61DAFB?style=for-the-badge&logo=react)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0+-38B2AC?style=for-the-badge&logo=tailwind-css)
 ![Web Audio API](https://img.shields.io/badge/Web%20Audio-API-orange?style=for-the-badge)
 ![Mobile Friendly](https://img.shields.io/badge/Mobile-Friendly-success?style=for-the-badge)
 
-## ✨ Основные возможности
+## ✨ Key Features
 
-### 🎯 Визуализация грифа
-- **24 лада** с фотореалистичной деревянной текстурой
-- Реалистичные металлические струны с градиентами
-- Маркеры ладов в стиле классической акустической гитары (Cort AD810, Yamaha F310)
-- Наглядное отображение нот с октавами (например: C3, F#4)
+### 🎯 Fretboard Visualization
+- **24 frets** with photorealistic wood texture
+- Realistic metallic strings with gradients
+- Fret markers in the style of classic acoustic guitars (Cort AD810, Yamaha F310)
+- Clear note display with octaves (e.g., C3, F#4)
 
-### 🎼 Работа с тональностями
-- **Визуальный кварто-квинтовый круг** с 24 сегментами
-- 12 мажорных тональностей (внешний круг)
-- 12 минорных тональностей (внутренний круг)
-- Интерактивный выбор с подсветкой параллельных тональностей
-- Автоматическая фильтрация нот по выбранной гамме
+### 🎼 Scale & Key Management
+- **Visual circle of fifths** with 24 segments
+- 12 major keys (outer circle)
+- 12 minor keys (inner circle)
+- Interactive selection with parallel key highlighting
+- Automatic note filtering by selected scale
 
-### 🔧 Настройка инструмента
-- **Пресеты строёв**: Стандартный, Drop D, Drop C, DADGAD, Open G, Open D
-- Создание и сохранение **собственных строёв**
-- Быстрая настройка каждой струны отдельно
-- Визуальный **каподастр** на любом ладу (1-12)
-- Правильный пересчёт нот и нумерации ладов с каподастром
+### 🔧 Instrument Setup
+- **Tuning presets**: Standard, Drop D, Drop C, DADGAD, Open G, Open D
+- Create and save **custom tunings**
+- Quick adjustment of each string individually
+- Visual **capo** on any fret (1-12)
+- Automatic recalculation of notes and fret numbering with capo
 
-### 🎵 Натуральные флажолеты
-- Отображение флажолетов на 5, 7, 12, 19, 24 ладах
-- Цветовая индикация сложности извлечения:
-    - 🟢 Зелёный (легко): 12, 24 лады — октава выше
-    - 🟡 Жёлтый (средне): 7, 19 лады — октава + квинта
-    - 🟠 Оранжевый (сложно): 5 лад — две октавы выше
-- Корректная работа с каподастром
+### 🎵 Natural Harmonics
+- Display harmonics on frets 5, 7, 12, 19, 24
+- Color-coded difficulty indication:
+    - 🟢 Green (easy): frets 12, 24 — octave higher
+    - 🟡 Yellow (medium): frets 7, 19 — octave + fifth
+    - 🟠 Orange (hard): fret 5 — two octaves higher
+- Works correctly with capo
 
-### 🔊 Режим прослушивания
-- Синтезированный **гитарный звук** с использованием Web Audio API
-- 6 гармоник для реалистичного тембра акустической гитары
-- Естественная атака и затухание звука
-- Правильные частоты для всех нот
+### 🔊 Listening Mode
+- Synthesized **guitar sound** using Web Audio API
+- 6 harmonics for realistic acoustic guitar timbre
+- Natural attack and decay
+- Accurate frequencies for all notes
 
-### 📐 Создание "боксов"
-- Скрытие нот по отдельным ладам (чекбоксы)
-- Скрытие/показ отдельных нот кликом
-- Возврат скрытых нот повторным кликом
-- Экспорт конфигурации в PNG с timestamp
+### 📐 Creating "Boxes"
+- Hide notes by individual frets (checkboxes)
+- Show/hide individual notes by clicking
+- Restore hidden notes with repeated clicks
+- Export configuration to PNG with timestamp
 
-### 💾 Сохранение
-- Экспорт грифа в PNG высокого качества
-- Сохранение пользовательских строёв (в сессии)
-- Снимки включают: ноты, строй, каподастр, тональность
+### 💾 Saving
+- Export fretboard to high-quality PNG
+- Save custom tunings (in session)
+- Snapshots include: notes, tuning, capo, key
 
-### 📱 Мобильная версия
-- **Адаптивный дизайн** - автоматическое переключение на мобильную версию
-- **Вертикальный гриф** - струны слева направо (E2 → E4), лады сверху вниз
-- **Touch-оптимизация** - увеличенные элементы (48x48px) для удобного тапа
-- **Компактные контролы** - сгруппированы в 3 секции для экономии места
-- **Минимальная ширина 320px** - работает даже на старых устройствах
-- **Полная функциональность** - все возможности desktop версии
-- Тестировано на Android и iOS
+### 📱 Mobile Version
+- **Responsive design** - automatic switch to mobile version
+- **Vertical fretboard** - strings left to right (E2 → E4), frets top to bottom
+- **Touch-optimized** - enlarged elements (48x48px) for comfortable tapping
+- **Compact controls** - grouped in 3 sections to save space
+- **Minimum width 320px** - works even on old devices
+- **Full functionality** - all desktop version features
+- Tested on Android and iOS
 
 ---
 
-## 🚀 Установка и запуск
+## 🚀 Installation and Launch
 
-### 🌐 Онлайн версия (самый простой способ)
+### 🌐 Online Version (Easiest Way)
 
-Приложение доступно онлайн без установки:
+The application is available online without installation:
 
 **👉 [https://guitar-flex.online](https://guitar-flex.online)**
 
-Работает на всех устройствах: десктоп, планшет, смартфон.
+Works on all devices: desktop, tablet, smartphone.
 
 ---
 
-### 🐳 Быстрый старт с Docker (для локального запуска)
+### 🐳 Quick Start with Docker (For Local Launch)
 
-Если хотите запустить приложение локально, используйте готовый Docker образ:
+If you want to run the application locally, use the ready-made Docker image:
 
 ```bash
 docker run -p 80:80 arkol/guitar-interactive-fretbar:latest
 ```
 
-После запуска откройте браузер и перейдите на:
+After launch, open your browser and go to:
 ```
 http://localhost:80
 ```
 
-**Преимущества Docker:**
-- ✅ Не требуется установка Node.js и зависимостей
-- ✅ Работает одинаково на всех платформах (Windows, Mac, Linux)
-- ✅ Готов к использованию за несколько секунд
-- ✅ Изолированное окружение без конфликтов
+**Docker Advantages:**
+- ✅ No need to install Node.js and dependencies
+- ✅ Works the same on all platforms (Windows, Mac, Linux)
+- ✅ Ready to use in seconds
+- ✅ Isolated environment without conflicts
 
-**Требования:**
-- Установленный [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+**Requirements:**
+- Installed [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ---
 
-### 💻 Установка из исходников (для разработки)
+### 💻 Installation from Source (For Development)
 
-#### Предварительные требования
-- **Node.js** версии 14.0 или выше
-- **npm** или **yarn**
+#### Prerequisites
+- **Node.js** version 14.0 or higher
+- **npm** or **yarn**
 
-#### Установка через WebStorm
+#### Installation via WebStorm
 
-#### Шаг 1: Клонирование или создание проекта
+##### Step 1: Clone or Create Project
 ```bash
-# В терминале WebStorm
+# In WebStorm terminal
 npx create-react-app guitar-interactive-fretboard
 cd guitar-interactive-fretboard
 ```
 
-#### Шаг 2: Установка зависимостей
+##### Step 2: Install Dependencies
 ```bash
 npm install lucide-react html2canvas
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```
 
-#### Шаг 3: Настройка Tailwind CSS
+##### Step 3: Configure Tailwind CSS
 
-Открой `tailwind.config.js` и замени содержимое:
+Open `tailwind.config.js` and replace content:
 ```javascript
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -141,7 +141,7 @@ module.exports = {
 }
 ```
 
-Открой `src/index.css` и замени содержимое:
+Open `src/index.css` and replace content:
 ```css
 @tailwind base;
 @tailwind components;
@@ -157,241 +157,248 @@ body {
 }
 ```
 
-#### Шаг 4: Добавление html2canvas
+##### Step 4: Add html2canvas
 
-Открой `public/index.html` и добавь в `<head>`:
+Open `public/index.html` and add to `<head>`:
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 ```
 
-#### Шаг 5: Добавление кода приложения
+##### Step 5: Add Application Code
 
-Замени содержимое `src/App.js` на код из артефакта.
+Replace `src/App.js` content with code from the artifact.
 
-#### Шаг 6: Запуск
+##### Step 6: Launch
 ```bash
 npm start
 ```
 
-Приложение откроется на `http://localhost:3000`
+The application will open at `http://localhost:3000`
 
 ---
 
-## 📖 Инструкция по использованию
+## 📖 User Guide
 
-### Основные режимы работы
+### Basic Operating Modes
 
-#### 🎨 Режим редактирования (по умолчанию)
-- **Клик по ноте** — скрыть/показать её
-- **Чекбокс под ладом** — скрыть/показать все ноты на ладу
-- **Клик по пустому месту** — вернуть скрытую ноту
+#### 🎨 Edit Mode (Default)
+- **Click on note** — hide/show it
+- **Checkbox under fret** — hide/show all notes on that fret
+- **Click on empty space** — restore hidden note
 
-#### 🔊 Режим прослушивания
-1. Нажми кнопку **"Прослушивание"** (с иконкой 🔊)
-2. Кликай по нотам для воспроизведения звука
-3. Ноты окрашиваются в фиолетовый цвет
+#### 🔊 Listening Mode
+1. Click **"Listening"** button (with 🔊 icon)
+2. Click on notes to play their sound
+3. Notes are colored purple
 
-### Работа с тональностями
+### Working with Keys
 
-#### Выбор через кварто-квинтовый круг
-1. Нажми кнопку **"Выбрать"** в секции "Тональность"
-2. Откроется визуальный круг:
-    - **Внешний круг** — мажорные тональности
-    - **Внутренний круг** — минорные тональности
-3. **Наведи** на сегмент — увидишь подсветку мажора и параллельного минора
-4. **Кликни** для выбора тональности
-5. На грифе останутся только ноты выбранной гаммы
+#### Selection via Circle of Fifths
+1. Click **"Select"** button in the "Key" section
+2. A visual circle opens:
+    - **Outer circle** — major keys
+    - **Inner circle** — minor keys
+3. **Hover** over a segment — see major and parallel minor highlighting
+4. **Click** to select key
+5. Only notes from the selected scale remain on the fretboard
 
-#### Работа с выбранной тональностью
-- В **режиме редактирования**: кликай по пустым местам чтобы вернуть ноты
-- В **режиме прослушивания**: кликай по нотам чтобы услышать звук гаммы
-- Нажми **"Сбросить"** чтобы вернуть все ноты
+#### Working with Selected Key
+- In **edit mode**: click on empty spaces to restore notes
+- In **listening mode**: click on notes to hear the scale sound
+- Click **"Reset"** to restore all notes
 
-### Настройка строя
+### Tuning Setup
 
-#### Использование пресетов
-Выбери один из готовых строёв:
-- **Стандартный**: E-A-D-G-B-E
+#### Using Presets
+Select one of the ready-made tunings:
+- **Standard**: E-A-D-G-B-E
 - **Drop D**: D-A-D-G-B-E
 - **Drop C**: C-G-C-F-A-D
 - **DADGAD**: D-A-D-G-A-D
 - **Open G**: D-G-D-G-B-D
 - **Open D**: D-A-D-F#-A-D
 
-#### Создание своего строя
-1. Настрой каждую струну через выпадающие списки слева
-2. Нажми кнопку **"+"** рядом с выбором строя
-3. Введи название (например: "Drop A#")
-4. Нажми **"Сохранить"**
-5. Твой строй добавится в список
+#### Creating Custom Tuning (Desktop Only)
+1. Adjust each string via dropdown lists on the left
+2. Click **"+"** button next to tuning selection
+3. Enter name (e.g., "Drop A#")
+4. Click **"Save"**
+5. Your tuning will be added to the list
 
-#### Удаление своего строя
-1. Выбери пользовательский строй из списка
-2. Нажми кнопку **"🗑️"**
-3. Строй будет удалён
+#### Deleting Custom Tuning
+1. Select custom tuning from the list
+2. Click **"🗑️"** button
+3. Tuning will be deleted
 
-### Использование каподастра
+### Using Capo
 
-1. Выбери лад в выпадающем списке **"Каподастр"** (1-12)
-2. Каподастр отобразится как полупрозрачный чёрный прямоугольник
-3. Нумерация ладов начинается от каподастра (0, 1, 2, 3...)
-4. Все ноты и флажолеты пересчитываются автоматически
+1. Select fret in **"Capo"** dropdown (1-12)
+2. Capo displays as a semi-transparent black rectangle
+3. Fret numbering starts from capo (0, 1, 2, 3...)
+4. All notes and harmonics recalculate automatically
 
-### Работа с флажолетами
+### Working with Harmonics
 
-1. Включи переключатель **"Флажолеты"**
-2. На грифе появятся ромбики на позициях флажолетов
-3. Цвет указывает на сложность:
-    - 🟢 Зелёный — легко извлечь
-    - 🟡 Жёлтый — средняя сложность
-    - 🟠 Оранжевый — сложно
-4. Внутри ромбика — нота которая прозвучит при извлечении флажолета
+1. Turn on **"Harmonics"** switch
+2. Diamond shapes appear on harmonic positions
+3. Color indicates difficulty:
+    - 🟢 Green — easy to produce
+    - 🟡 Yellow — medium difficulty
+    - 🟠 Orange — hard
+4. Inside the diamond — the note that will sound when producing the harmonic
 
-### Экспорт снимков
+### Exporting Snapshots
 
-1. Настрой гриф как нужно (ноты, строй, каподастр, тональность)
-2. Нажми кнопку **"Сохранить PNG"** 📥
-3. Скачается изображение с названием `fretboard-YYYY-MM-DD-HH-MM.png`
-4. Изображение включает всё видимое состояние грифа
-
----
-
-## 🎯 Практические примеры использования
-
-### Для изучения тональностей
-1. Откройте [guitar-flex.online](https://guitar-flex.online)
-2. Выберите тональность через кварто-квинтовый круг (например, C мажор)
-3. Изучи расположение нот на грифе
-4. Используй режим прослушивания для запоминания звучания
-
-### Для создания боксов гамм
-1. Выбери тональность
-2. Скрывай ненужные ноты на определённых ладах
-3. Сохрани результат как PNG для шпаргалки
-
-### Для изучения флажолетов
-1. Включи режим флажолетов
-2. Попробуй разные строи и каподастр
-3. Используй цветовую индикацию для понимания сложности
-
-### Для экспериментов со строями
-1. Создай нестандартный строй (на десктопе)
-2. Посмотри как меняется расположение нот
-3. Найди интересные аппликатуры аккордов
-
-### На мобильном устройстве
-1. Открой [guitar-flex.online](https://guitar-flex.online) на телефоне
-2. Вертикальный гриф идеально подходит для практики в пути
-3. Используй режим прослушивания для проверки нот
-4. Сохраняй снимки в галерею для быстрого доступа
+1. Configure fretboard as needed (notes, tuning, capo, key)
+2. Click **"Save PNG"** button 📥
+3. Image downloads with name `fretboard-YYYY-MM-DD-HH-MM.png`
+4. Image includes all visible fretboard state
 
 ---
 
-## 🛠️ Технологии
+## 🎯 Practical Use Cases
 
-- **React 18** — библиотека для построения UI
+### For Learning Scales
+1. Open [guitar-flex.online](https://guitar-flex.online)
+2. Select a key via circle of fifths (e.g., C major)
+3. Study note positions on the fretboard
+4. Use listening mode to memorize sounds
+
+### For Creating Scale Boxes
+1. Select a key
+2. Hide unnecessary notes on certain frets
+3. Save result as PNG for reference
+
+### For Learning Harmonics
+1. Turn on harmonics mode
+2. Try different tunings and capo positions
+3. Use color coding to understand difficulty
+
+### For Experimenting with Tunings
+1. Create a non-standard tuning (on desktop)
+2. See how note positions change
+3. Find interesting chord voicings
+
+### On Mobile Device
+1. Open [guitar-flex.online](https://guitar-flex.online) on your phone
+2. Vertical fretboard is perfect for practice on the go
+3. Use listening mode to check notes
+4. Save snapshots to gallery for quick access
+
+---
+
+## 🛠️ Technologies
+
+- **React 18** — UI building library
 - **Tailwind CSS** — utility-first CSS framework
-- **Lucide React** — иконки
-- **Web Audio API** — синтез звука гитары
-- **html2canvas** — экспорт в PNG
-- **CSS Gradients** — реалистичные текстуры дерева и металла
+- **Lucide React** — icons
+- **Web Audio API** — guitar sound synthesis
+- **html2canvas** — PNG export
+- **CSS Gradients** — realistic wood and metal textures
 
 ---
 
-## 🎨 Дизайн
+## 🎨 Design
 
-### Визуальный стиль
-- **Скевоморфизм** — реалистичные материалы и текстуры
-- Деревянная текстура грифа в стиле Cort AD810 / Yamaha F310
-- Металлические струны с правильными толщинами и градиентами
-- Глубокие тени и световые блики для объёма
+### Visual Style
+- **Skeuomorphism** — realistic materials and textures
+- Wood texture of fretboard styled after Cort AD810 / Yamaha F310
+- Metallic strings with correct thicknesses and gradients
+- Deep shadows and light highlights for volume
 
-### Цветовая палитра
-- **Фон**: градиенты коричневого дерева (#3e2723, #4a2c1c)
-- **Гриф**: песочные и янтарные оттенки (#D4A574, #C19A6B)
-- **Ноты**: золотистые (#ffd700, #fffacd)
-- **Акценты**: зелёный для тональностей, фиолетовый для режима прослушивания
-
----
-
-## ⚙️ Возможные проблемы и решения
-
-### Звук не воспроизводится
-**Причина**: Браузерная политика autoplay  
-**Решение**:
-1. Кликни в любом месте страницы перед использованием режима прослушивания
-2. Перезагрузи страницу и попробуй снова
-3. Проверь настройки звука в браузере
-
-### Tailwind стили не применяются
-**Причина**: Неправильная конфигурация  
-**Решение**:
-1. Убедись что `tailwind.config.js` настроен правильно
-2. Проверь что `@tailwind` директивы есть в `src/index.css`
-3. Перезапусти dev-сервер (`npm start`)
-
-### Экспорт в PNG не работает
-**Причина**: html2canvas не загружен  
-**Решение**:
-1. Проверь наличие скрипта в `public/index.html`
-2. Открой консоль браузера (F12) и проверь ошибки
-3. Попробуй использовать другой браузер
+### Color Palette
+- **Background**: brown wood gradients (#3e2723, #4a2c1c)
+- **Fretboard**: sandy and amber shades (#D4A574, #C19A6B)
+- **Notes**: golden (#ffd700, #fffacd)
+- **Accents**: green for keys, purple for listening mode
 
 ---
 
-## 🚧 Будущие улучшения
+## ⚙️ Troubleshooting
 
-- [ ] Сохранение пользовательских строёв в localStorage
-- [ ] Больше типов флажолетов (искусственные, тэппинговые)
-- [ ] Режим аккордов с диаграммами
-- [ ] Экспорт/импорт конфигураций в JSON
-- [ ] Поддержка других инструментов (бас, укулеле, 7-струнная)
-- [ ] Метроном для практики
-- [ ] Режим "угадай ноту" для тренировки слуха
-- [ ] Темная/светлая тема
-- [ ] Режим табулатур
-- [ ] История изменений с возможностью отмены
+### Sound Doesn't Play
+**Cause**: Browser autoplay policy  
+**Solution**:
+1. Click anywhere on the page before using listening mode
+2. Reload the page and try again
+3. Check browser sound settings
 
----
+### Tailwind Styles Not Applied
+**Cause**: Incorrect configuration  
+**Solution**:
+1. Make sure `tailwind.config.js` is configured correctly
+2. Check that `@tailwind` directives are in `src/index.css`
+3. Restart dev server (`npm start`)
 
-## 📊 Статистика
+### PNG Export Doesn't Work
+**Cause**: html2canvas not loaded  
+**Solution**:
+1. Check for script in `public/index.html`
+2. Open browser console (F12) and check for errors
+3. Try using a different browser
 
-- 🌐 Онлайн: [guitar-flex.online](https://guitar-flex.online)
-- 📱 Полная поддержка мобильных устройств
-- 🎵 24 лада × 6 струн = 144 позиции
-- 🎼 12 мажорных + 12 минорных тональностей
-- 🎸 6 предустановленных строёв
-- 🔊 Реалистичный синтез гитарного звука
-
----
-
-## 📄 Лицензия
-
-Этот проект создан в образовательных целях. Свободно используй и модифицируй для своих нужд.
-
----
-
-## 🤝 Контрибьюция
-
-Нашли баг или есть идея улучшения? Открывайте issue или pull request!
+### Mobile Version Issues
+**Cause**: Browser cache or viewport settings  
+**Solution**:
+1. Hard reload page (Ctrl+Shift+R or Cmd+Shift+R)
+2. Clear browser cache
+3. Check that viewport meta tag is present in HTML
 
 ---
 
-## 👨‍💻 Автор
+## 🚧 Future Improvements
 
-Создано с ❤️ для гитаристов всех уровней.
-
-**Попробуй прямо сейчас:** [guitar-flex.online](https://guitar-flex.online)
-
----
-
-## 📞 Поддержка
-
-Если возникли проблемы:
-1. Проверь раздел "Возможные проблемы и решения"
-2. Открой issue с подробным описанием
-3. Приложи скриншоты и логи консоли
+- [ ] Save custom tunings to localStorage
+- [ ] More harmonic types (artificial, tapping)
+- [ ] Chord mode with diagrams
+- [ ] Export/import configurations in JSON
+- [ ] Support for other instruments (bass, ukulele, 7-string)
+- [ ] Metronome for practice
+- [ ] "Guess the note" mode for ear training
+- [ ] Dark/light theme
+- [ ] Tablature mode
+- [ ] Undo history
 
 ---
 
-**Удачной практики! 🎸🎵**
+## 📊 Statistics
+
+- 🌐 Online: [guitar-flex.online](https://guitar-flex.online)
+- 📱 Full mobile device support
+- 🎵 24 frets × 6 strings = 144 positions
+- 🎼 12 major + 12 minor keys
+- 🎸 6 preset tunings
+- 🔊 Realistic guitar sound synthesis
+
+---
+
+## 📄 License
+
+This project was created for educational purposes. Feel free to use and modify for your needs.
+
+---
+
+## 🤝 Contributing
+
+Found a bug or have an improvement idea? Open an issue or pull request!
+
+---
+
+## 👨‍💻 Author
+
+Created with ❤️ for guitarists of all levels.
+
+**Try it now:** [guitar-flex.online](https://guitar-flex.online)
+
+---
+
+## 📞 Support
+
+If you encounter problems:
+1. Check the "Troubleshooting" section
+2. Open an issue with detailed description
+3. Attach screenshots and console logs
+
+---
+
+**Happy practicing! 🎸🎵**
