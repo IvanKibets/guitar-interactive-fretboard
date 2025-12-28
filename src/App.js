@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Volume2, VolumeX, Plus, Trash2, Menu, X } from 'lucide-react';
+import { Download, Volume2, VolumeX, Plus, Trash2, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const GuitarFretboard = () => {
+  const { t, i18n } = useTranslation();
   const FRETS = 24;
 
   // Preset tunings
@@ -58,9 +60,15 @@ const GuitarFretboard = () => {
   const [showAddTuning, setShowAddTuning] = useState(false);
   const [newTuningName, setNewTuningName] = useState('');
   const [showCircle, setShowCircle] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const fretboardRef = useRef(null);
   const audioContextRef = useRef(null);
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('language', lng);
+    setShowLangMenu(false);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -357,9 +365,43 @@ const GuitarFretboard = () => {
       >
         <div className="max-w-[1800px] mx-auto">
           <div className="text-center mb-6">
-            <h1 className="text-4xl font-bold text-amber-200 mb-2 drop-shadow-lg">Интерактивный гитарный гриф</h1>
+            <div className="flex justify-center items-center gap-4 mb-2">
+              <h1 className="text-4xl font-bold text-amber-200 drop-shadow-lg">{t('title')}</h1>
+
+              {/* Language Switcher */}
+              <div className="relative">
+                <button
+                    onClick={() => setShowLangMenu(!showLangMenu)}
+                    className="p-2 bg-amber-700 hover:bg-amber-600 text-white rounded-lg transition-colors shadow-lg"
+                    title="Language / Язык"
+                >
+                  <Globe size={24} />
+                </button>
+
+                {showLangMenu && (
+                    <div className="absolute right-0 mt-2 bg-amber-50 rounded-lg shadow-xl border-2 border-amber-700 overflow-hidden z-50">
+                      <button
+                          onClick={() => changeLanguage('en')}
+                          className={`w-full px-4 py-2 text-left hover:bg-amber-100 transition-colors flex items-center gap-2 ${
+                              i18n.language === 'en' ? 'bg-amber-200 font-bold' : ''
+                          }`}
+                      >
+                        <span className="text-xl">🇬🇧</span> English
+                      </button>
+                      <button
+                          onClick={() => changeLanguage('ru')}
+                          className={`w-full px-4 py-2 text-left hover:bg-amber-100 transition-colors flex items-center gap-2 ${
+                              i18n.language === 'ru' ? 'bg-amber-200 font-bold' : ''
+                          }`}
+                      >
+                        <span className="text-xl">🇷🇺</span> Русский
+                      </button>
+                    </div>
+                )}
+              </div>
+            </div>
             <p className="text-amber-300">
-              {playMode ? 'Режим прослушивания: кликай по нотам чтобы услышать их звук' : 'Кликай по нотам чтобы скрыть/показать их'}
+              {playMode ? t('subtitle.listen') : t('subtitle.edit')}
             </p>
           </div>
 
@@ -369,21 +411,27 @@ const GuitarFretboard = () => {
             border: '3px solid rgba(160, 82, 45, 0.8)'
           }}>
             <div className="flex items-center gap-3">
-              <label className="font-semibold text-amber-100">Строй:</label>
+              <label className="font-semibold text-amber-100">{t('controls.tuning')}:</label>
               <select
                   value={selectedTuning}
                   onChange={(e) => changeTuningPreset(e.target.value)}
                   className="px-4 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold"
               >
-                {Object.keys(allTunings).map(preset => (
+                <option value="Стандартный">{t('tunings.standard')}</option>
+                <option value="Drop D">{t('tunings.dropD')}</option>
+                <option value="Drop C">{t('tunings.dropC')}</option>
+                <option value="DADGAD">{t('tunings.dadgad')}</option>
+                <option value="Open G">{t('tunings.openG')}</option>
+                <option value="Open D">{t('tunings.openD')}</option>
+                {Object.keys(customTunings).map(preset => (
                     <option key={preset} value={preset}>{preset}</option>
                 ))}
-                <option value="Настраиваемый">Настраиваемый</option>
+                <option value="Настраиваемый">{t('tunings.custom')}</option>
               </select>
               <button
                   onClick={() => setShowAddTuning(true)}
                   className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                  title="Добавить строй"
+                  title={t('controls.addTuning')}
               >
                 <Plus size={20} />
               </button>
@@ -391,7 +439,7 @@ const GuitarFretboard = () => {
                   <button
                       onClick={() => deleteCustomTuning(selectedTuning)}
                       className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                      title="Удалить строй"
+                      title={t('controls.deleteTuning')}
                   >
                     <Trash2 size={20} />
                   </button>
@@ -399,26 +447,26 @@ const GuitarFretboard = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <label className="font-semibold text-amber-100">Каподастр:</label>
+              <label className="font-semibold text-amber-100">{t('controls.capo')}:</label>
               <select
                   value={capo}
                   onChange={(e) => setCapo(Number(e.target.value))}
                   className="px-4 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold"
               >
-                <option value={0}>Нет</option>
+                <option value={0}>{t('controls.none')}</option>
                 {Array.from({length: 12}, (_, i) => i + 1).map(f => (
-                    <option key={f} value={f}>Лад {f}</option>
+                    <option key={f} value={f}>{t('controls.fret')} {f}</option>
                 ))}
               </select>
             </div>
 
             <div className="flex items-center gap-3 relative">
-              <label className="font-semibold text-amber-100">Тональность:</label>
+              <label className="font-semibold text-amber-100">{t('controls.key')}:</label>
               <button
                   onClick={() => setShowCircle(!showCircle)}
                   className="px-4 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold hover:bg-amber-100 transition-colors"
               >
-                {selectedKey ? `${selectedKey}${isMinor ? ' минор' : ' мажор'}` : 'Выбрать'}
+                {selectedKey ? `${selectedKey} ${isMinor ? t('keys.minor') : t('keys.major')}` : t('controls.select')}
               </button>
               {selectedKey && (
                   <button
@@ -429,13 +477,13 @@ const GuitarFretboard = () => {
                       }}
                       className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
                   >
-                    Сбросить
+                    {t('controls.reset')}
                   </button>
               )}
             </div>
 
             <div className="flex items-center gap-3">
-              <label className="font-semibold text-amber-100">Флажолеты:</label>
+              <label className="font-semibold text-amber-100">{t('controls.harmonics')}:</label>
               <button
                   onClick={() => setShowHarmonics(!showHarmonics)}
                   className={`px-6 py-2 rounded-lg font-semibold transition-all shadow-md ${
@@ -444,12 +492,12 @@ const GuitarFretboard = () => {
                           : 'bg-gray-400 text-gray-800'
                   }`}
               >
-                {showHarmonics ? 'Вкл' : 'Выкл'}
+                {showHarmonics ? t('controls.on') : t('controls.off')}
               </button>
             </div>
 
             <div className="flex items-center gap-3">
-              <label className="font-semibold text-amber-100">Режим:</label>
+              <label className="font-semibold text-amber-100">{t('controls.mode')}:</label>
               <button
                   onClick={() => setPlayMode(!playMode)}
                   className={`flex items-center gap-2 px-6 py-2 rounded-lg font-semibold transition-all shadow-md ${
@@ -458,7 +506,7 @@ const GuitarFretboard = () => {
                           : 'bg-gray-400 text-gray-800'
                   }`}
               >
-                {playMode ? <><Volume2 size={18} /> Прослушивание</> : <><VolumeX size={18} /> Редактирование</>}
+                {playMode ? <><Volume2 size={18} /> {t('controls.listening')}</> : <><VolumeX size={18} /> {t('controls.editing')}</>}
               </button>
             </div>
 
@@ -467,7 +515,7 @@ const GuitarFretboard = () => {
                 className="flex items-center gap-2 px-6 py-2 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors shadow-lg"
             >
               <Download size={20} />
-              Сохранить PNG
+              {t('controls.save')}
             </button>
           </div>
 
@@ -671,19 +719,19 @@ const GuitarFretboard = () => {
                 background: 'linear-gradient(135deg, rgba(139, 90, 43, 0.9) 0%, rgba(101, 67, 33, 0.9) 100%)',
                 border: '2px solid rgba(160, 82, 45, 0.8)'
               }}>
-                <h3 className="font-bold text-amber-100 mb-2 text-lg">Легенда флажолетов:</h3>
+                <h3 className="font-bold text-amber-100 mb-2 text-lg">{t('harmonics.legend')}</h3>
                 <div className="flex gap-6 text-sm flex-wrap">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-green-500 rounded shadow-md" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}></div>
-                    <span className="text-amber-100 font-semibold">Легко (12, 24 лады) - октава выше</span>
+                    <span className="text-amber-100 font-semibold">{t('harmonics.easy')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-yellow-500 rounded shadow-md" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}></div>
-                    <span className="text-amber-100 font-semibold">Средне (7, 19 лады) - октава + квинта</span>
+                    <span className="text-amber-100 font-semibold">{t('harmonics.medium')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-orange-500 rounded shadow-md" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}></div>
-                    <span className="text-amber-100 font-semibold">Сложно (5 лад) - две октавы выше</span>
+                    <span className="text-amber-100 font-semibold">{t('harmonics.hard')}</span>
                   </div>
                 </div>
               </div>
@@ -695,8 +743,8 @@ const GuitarFretboard = () => {
                 border: '2px solid rgba(76, 175, 80, 0.8)'
               }}>
                 <p className="text-white font-semibold">
-                  Отображается тональность: {selectedKey} {isMinor ? 'минор' : 'мажор'}.
-                  {playMode ? ' Кликай по нотам чтобы услышать их звук.' : ' Кликай по пустым местам на грифе чтобы вернуть ноты.'}
+                  {t('keyInfo.displaying')} {selectedKey} {isMinor ? t('keys.minor') : t('keys.major')}.
+                  {playMode ? ` ${t('keyInfo.clickToHear')}` : ` ${t('keyInfo.clickToRestore')}`}
                 </p>
               </div>
           )}
@@ -718,9 +766,42 @@ const GuitarFretboard = () => {
         <div className="p-4">
           {/* Header */}
           <div className="text-center mb-4">
-            <h1 className="text-2xl font-bold text-amber-200 mb-1 drop-shadow-lg">🎸 Гитарный гриф</h1>
+            <div className="flex justify-center items-center gap-2 mb-1">
+              <h1 className="text-2xl font-bold text-amber-200 drop-shadow-lg">🎸 {t('title')}</h1>
+
+              {/* Language Switcher Mobile */}
+              <div className="relative">
+                <button
+                    onClick={() => setShowLangMenu(!showLangMenu)}
+                    className="p-1.5 bg-amber-700 hover:bg-amber-600 text-white rounded-lg transition-colors shadow-lg"
+                >
+                  <Globe size={20} />
+                </button>
+
+                {showLangMenu && (
+                    <div className="absolute right-0 mt-2 bg-amber-50 rounded-lg shadow-xl border-2 border-amber-700 overflow-hidden z-50 whitespace-nowrap">
+                      <button
+                          onClick={() => changeLanguage('en')}
+                          className={`w-full px-3 py-2 text-left text-sm hover:bg-amber-100 transition-colors flex items-center gap-2 ${
+                              i18n.language === 'en' ? 'bg-amber-200 font-bold' : ''
+                          }`}
+                      >
+                        🇬🇧 EN
+                      </button>
+                      <button
+                          onClick={() => changeLanguage('ru')}
+                          className={`w-full px-3 py-2 text-left text-sm hover:bg-amber-100 transition-colors flex items-center gap-2 ${
+                              i18n.language === 'ru' ? 'bg-amber-200 font-bold' : ''
+                          }`}
+                      >
+                        🇷🇺 RU
+                      </button>
+                    </div>
+                )}
+              </div>
+            </div>
             <p className="text-amber-300 text-sm">
-              {playMode ? '🔊 Тап для звука' : '👆 Тап чтобы скрыть/показать'}
+              {playMode ? `🔊 ${t('subtitle.listen').split(':')[1]}` : `👆 ${t('subtitle.edit')}`}
             </p>
           </div>
 
@@ -731,27 +812,33 @@ const GuitarFretboard = () => {
           }}>
             <div className="flex gap-2 mb-2">
               <div className="flex-1">
-                <label className="text-amber-100 text-xs font-semibold mb-1 block">Строй</label>
+                <label className="text-amber-100 text-xs font-semibold mb-1 block">{t('controls.tuning')}</label>
                 <select
                     value={selectedTuning}
                     onChange={(e) => changeTuningPreset(e.target.value)}
                     className="w-full px-3 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold text-sm"
                 >
-                  {Object.keys(allTunings).map(preset => (
+                  <option value="Стандартный">{t('tunings.standard')}</option>
+                  <option value="Drop D">{t('tunings.dropD')}</option>
+                  <option value="Drop C">{t('tunings.dropC')}</option>
+                  <option value="DADGAD">{t('tunings.dadgad')}</option>
+                  <option value="Open G">{t('tunings.openG')}</option>
+                  <option value="Open D">{t('tunings.openD')}</option>
+                  {Object.keys(customTunings).map(preset => (
                       <option key={preset} value={preset}>{preset}</option>
                   ))}
                 </select>
               </div>
               <div className="flex-1">
-                <label className="text-amber-100 text-xs font-semibold mb-1 block">Капо</label>
+                <label className="text-amber-100 text-xs font-semibold mb-1 block">{t('controls.capo')}</label>
                 <select
                     value={capo}
                     onChange={(e) => setCapo(Number(e.target.value))}
                     className="w-full px-3 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold text-sm"
                 >
-                  <option value={0}>Нет</option>
+                  <option value={0}>{t('controls.none')}</option>
                   {Array.from({length: 12}, (_, i) => i + 1).map(f => (
-                      <option key={f} value={f}>Лад {f}</option>
+                      <option key={f} value={f}>{t('controls.fret')} {f}</option>
                   ))}
                 </select>
               </div>
@@ -764,13 +851,13 @@ const GuitarFretboard = () => {
             border: '2px solid rgba(160, 82, 45, 0.8)'
           }}>
             <div className="mb-2">
-              <label className="text-amber-100 text-xs font-semibold mb-1 block">Тональность</label>
+              <label className="text-amber-100 text-xs font-semibold mb-1 block">{t('controls.key')}</label>
               <div className="flex gap-2">
                 <button
                     onClick={() => setShowCircle(!showCircle)}
                     className="flex-1 px-3 py-2 border-2 border-amber-700 rounded-lg bg-amber-50 font-semibold hover:bg-amber-100 transition-colors text-sm"
                 >
-                  {selectedKey ? `${selectedKey}${isMinor ? 'm' : 'M'}` : 'Выбрать'}
+                  {selectedKey ? `${selectedKey}${isMinor ? 'm' : 'M'}` : t('controls.select')}
                 </button>
                 {selectedKey && (
                     <button
@@ -795,7 +882,7 @@ const GuitarFretboard = () => {
                           : 'bg-gray-400 text-gray-800'
                   }`}
               >
-                {showHarmonics ? '🎵 Флажолеты' : 'Флажолеты'}
+                {showHarmonics ? `🎵 ${t('controls.harmonics')}` : t('controls.harmonics')}
               </button>
             </div>
           </div>
@@ -814,7 +901,7 @@ const GuitarFretboard = () => {
                           : 'bg-gray-400 text-gray-800'
                   }`}
               >
-                {playMode ? <><Volume2 size={18} /> Слушать</> : <><VolumeX size={18} /> Править</>}
+                {playMode ? <><Volume2 size={18} /> {t('mobile.shortListening')}</> : <><VolumeX size={18} /> {t('mobile.shortEditing')}</>}
               </button>
               <button
                   onClick={exportSnapshot}
@@ -986,7 +1073,7 @@ const GuitarFretboard = () => {
                 border: '2px solid rgba(76, 175, 80, 0.8)'
               }}>
                 <p className="text-white font-semibold">
-                  {selectedKey} {isMinor ? 'минор' : 'мажор'}
+                  {selectedKey} {isMinor ? t('keys.minor') : t('keys.major')}
                 </p>
               </div>
           )}
@@ -1002,7 +1089,7 @@ const GuitarFretboard = () => {
         {showCircle && (
             <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={() => setShowCircle(false)}>
               <div className="bg-amber-50 p-4 md:p-8 rounded-xl shadow-2xl max-w-full" onClick={(e) => e.stopPropagation()}>
-                <h2 className="text-xl md:text-2xl font-bold text-amber-900 mb-4 md:mb-6 text-center">Кварто-квинтовый круг</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-amber-900 mb-4 md:mb-6 text-center">{t('circle.title')}</h2>
                 <svg width={isMobile ? "300" : "500"} height={isMobile ? "300" : "500"} viewBox="0 0 500 500" className="max-w-full">
                   {/* Outer circle (Major keys) */}
                   {CIRCLE_DATA.map((data, idx) => {
@@ -1095,12 +1182,12 @@ const GuitarFretboard = () => {
 
                   {/* Center circle */}
                   <circle cx="250" cy="250" r="80" fill="rgba(139, 90, 43, 0.9)" stroke="#6B563F" strokeWidth="3" />
-                  <text x="250" y="235" textAnchor="middle" className="font-bold text-sm md:text-base fill-amber-100">Внешний:</text>
-                  <text x="250" y="255" textAnchor="middle" className="font-bold text-sm md:text-base fill-amber-100">мажор</text>
-                  <text x="250" y="275" textAnchor="middle" className="font-bold text-xs md:text-sm fill-amber-200">Внутренний:</text>
-                  <text x="250" y="290" textAnchor="middle" className="font-bold text-xs md:text-sm fill-amber-200">минор</text>
+                  <text x="250" y="235" textAnchor="middle" className="font-bold text-sm md:text-base fill-amber-100">{t('circle.outer')}</text>
+                  <text x="250" y="255" textAnchor="middle" className="font-bold text-sm md:text-base fill-amber-100">{t('circle.major')}</text>
+                  <text x="250" y="275" textAnchor="middle" className="font-bold text-xs md:text-sm fill-amber-200">{t('circle.inner')}</text>
+                  <text x="250" y="290" textAnchor="middle" className="font-bold text-xs md:text-sm fill-amber-200">{t('circle.minor')}</text>
                 </svg>
-                <p className="text-center text-amber-800 mt-4 text-sm">{isMobile ? 'Тап для выбора' : 'Наведи для предпросмотра, кликни для выбора'}</p>
+                <p className="text-center text-amber-800 mt-4 text-sm">{isMobile ? t('circle.hintMobile') : t('circle.hint')}</p>
               </div>
             </div>
         )}
@@ -1109,11 +1196,11 @@ const GuitarFretboard = () => {
         {showAddTuning && !isMobile && (
             <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setShowAddTuning(false)}>
               <div className="bg-amber-50 p-8 rounded-xl shadow-2xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                <h2 className="text-2xl font-bold text-amber-900 mb-4">Добавить свой строй</h2>
-                <p className="text-amber-700 mb-4">Текущий строй (от низкой к высокой): {[...tuning].reverse().join(', ')}</p>
+                <h2 className="text-2xl font-bold text-amber-900 mb-4">{t('modal.addTuning.title')}</h2>
+                <p className="text-amber-700 mb-4">{t('modal.addTuning.current')} {[...tuning].reverse().join(', ')}</p>
                 <input
                     type="text"
-                    placeholder="Название строя..."
+                    placeholder={t('modal.addTuning.placeholder')}
                     value={newTuningName}
                     onChange={(e) => setNewTuningName(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCustomTuning()}
@@ -1124,7 +1211,7 @@ const GuitarFretboard = () => {
                       onClick={addCustomTuning}
                       className="flex-1 px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
                   >
-                    Сохранить
+                    {t('modal.addTuning.save')}
                   </button>
                   <button
                       onClick={() => {
@@ -1133,7 +1220,7 @@ const GuitarFretboard = () => {
                       }}
                       className="flex-1 px-6 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition-colors"
                   >
-                    Отмена
+                    {t('modal.addTuning.cancel')}
                   </button>
                 </div>
               </div>

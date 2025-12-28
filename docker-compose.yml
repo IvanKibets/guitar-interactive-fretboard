@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: arkol/guitar-interactive-fretbar:latest
+    ports:
+        - "80:80"
+        - "443:443"
+    restart: always
