@@ -1,0 +1,4 @@
+guitar-flex.online, www.guitar-flex.online {
+    root * /usr/share/caddy
+    file_server
+}
