@@ -32,8 +32,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/react-app:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/react-app:latest
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/guitar-interactive-fretbar:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/guitar-interactive-fretbar:latest
 
       - name: Deploy to Oracle Cloud
         uses: appleboy/ssh-action@v1
