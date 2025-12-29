@@ -1,5 +1,6 @@
 services:
   frontend:
+    container_name: react-app
     image: arkol/guitar-interactive-fretbar:latest
     ports:
         - "80:80"
