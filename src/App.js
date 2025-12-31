@@ -1192,7 +1192,7 @@ const GuitarFretboard = () => {
             </div>
         )}
 
-        {/* Add Tuning Modal */}
+        {/* Add Tuning Modal test */}
         {showAddTuning && !isMobile && (
             <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setShowAddTuning(false)}>
               <div className="bg-amber-50 p-8 rounded-xl shadow-2xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
