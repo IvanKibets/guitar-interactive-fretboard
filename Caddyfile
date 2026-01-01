@@ -1,4 +1,8 @@
-guitar-flex.online, www.guitar-flex.online {
+{
+    auto_https off
+}
+
+:80 {
     root * /usr/share/caddy
     file_server
 }

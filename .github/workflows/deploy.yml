@@ -59,10 +59,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/guitar-interactive-fretboard:latest
-            docker stop react-app || true
-            docker rm react-app || true
-            docker run -d \
-              --restart unless-stopped \
-              -p 80:80 \
-              --name react-app \
-              ${{ secrets.DOCKERHUB_USERNAME }}/guitar-interactive-fretboard:latest
+            docker compose up -d --force-recreate
+          
+
