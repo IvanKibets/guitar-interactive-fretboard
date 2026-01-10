@@ -60,5 +60,7 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/guitar-interactive-fretboard:latest
             docker compose up -d
+            docker image prune -f
+            docker builder prune -f
           
 
