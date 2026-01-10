@@ -59,6 +59,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/guitar-interactive-fretboard:latest
-            docker compose up -d --force-recreate
+            docker compose up -d
           
 
